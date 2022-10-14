@@ -3,7 +3,7 @@ description: 'Automate master-to-team merges'
 inputs:
   branch:
     description: 'The branch to create'
-    default: 'develop'
+    default: 'master-to-develop'
   sha:
     description: 'The SHA1 value for the branch reference'
 outputs:
