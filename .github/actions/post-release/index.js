@@ -8,7 +8,7 @@ class PostReleaseManager {
 
     this.owner = owner;
     this.repo = repo;
-    this.github = github.getOctokit(process.env.GITHUB_TOKEN);
+    this.octokit = github.getOctokit(process.env.GITHUB_TOKEN);
   }
 
   async createBranch(context) {
