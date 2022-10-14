@@ -36,7 +36,7 @@ class PostReleaseManager {
         repo: this.repo,
       });
       console.log(resp);
-      return resp.data.commit.sha;
+      return resp;
     } catch (error) {
         throw Error(error);
       }
