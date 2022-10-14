@@ -36,7 +36,7 @@ class PostReleaseManager {
         repo: this.repo,
       });
       console.log(resp);
-      return resp;
+      return resp.data.commit.sha;
     } catch (error) {
         throw Error(error);
       }
@@ -48,11 +48,13 @@ class PostReleaseManager {
       const resp = await this.github.repos.merge({
         owner: this.owner,
         repo: this.repo,
-        base,
-        head,
+        base: 'master-to-develop',
+        head: 'master',
       });
-    } catch {
 
+      return resp;
+    } catch (error) {
+      throw Error(error);
     }
   }
 
@@ -61,9 +63,10 @@ class PostReleaseManager {
       let that = this;
       console.log('Create new branch');
       const developBranch = await that.getDevBranch();
+
       await that.createBranch(developBranch);
-      console.log('Create new branch');
-      // await that.mergeBranches(developBranch, masterToDevelopment);
+      console.log('Merging branches');
+      await that.mergeBranches();
     } catch (error) {
       core.setFailed(error.message);
     }
