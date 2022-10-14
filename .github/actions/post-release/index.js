@@ -11,7 +11,7 @@ class PostReleaseManager {
     this.github = new GitHub(process.env.GITHUB_TOKEN);
   }
 
-  async createBranch(context, sha) {
+  async createBranch(context) {
       const branch = core.getInput('branch');
       const sha = core.getInput('sha');
 
