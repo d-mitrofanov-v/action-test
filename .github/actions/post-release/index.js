@@ -74,7 +74,7 @@ class PostReleaseManager {
       owner: this.owner,
       repo: this.repo,
       pull_number: prNum,
-      reviewers: 'd-mitrofanov-v',
+      reviewers: ['d-mitrofanov-v'],
     });
     return resp;
   }
