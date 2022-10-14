@@ -27,13 +27,14 @@ class PostReleaseManager {
       });
       console.log(developBranch);
       const developBranchSHA = developBranch.data.commit.sha;
-      console.log(developBranchSHA);
+      console.log(developBranch);
 
       try {
         const resp = await this.github.git.createRef({
           ref,
           sha: developBranchSHA,
-          ...context.repo,
+          owner: this.owner,
+          repo: this.repo,
         });
 
         return resp;
