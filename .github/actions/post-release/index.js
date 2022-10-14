@@ -35,7 +35,7 @@ class PostReleaseManager {
         owner: this.owner,
         repo: this.repo,
       });
-      console.log(resp);
+
       return resp;
     } catch (error) {
         throw Error(error);
@@ -52,7 +52,7 @@ class PostReleaseManager {
         head: 'master-to-develop',
         title: 'Master to develop into develop'
       });
-
+      console.log(resp)
       return resp.number;
     } catch (error) {
       throw Error(error);
