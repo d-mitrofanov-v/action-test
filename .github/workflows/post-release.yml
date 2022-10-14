@@ -15,9 +15,6 @@ jobs:
     - name: Create master-to-develop branch
       run: git branch master-to-develop develop
       
-    - name: Push new branch  
-      run: git push origin master-to-develop
-      
     - name: Create PR
       run: gh pr create -B develop -H master-to-develop --assignee d-mitrofanov-v --title 'Merge master-to-develop into develop' --body 'Created by Github action'
       
