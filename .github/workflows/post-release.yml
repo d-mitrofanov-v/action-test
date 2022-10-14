@@ -25,4 +25,4 @@ jobs:
           git fetch --unshallow
           git checkout master-to-develop
           git merge --no-ff origin/master -m "Auto-merge master back to master-to-develop"
-          git push
+          git push --set-upstream origin master-to-develop
