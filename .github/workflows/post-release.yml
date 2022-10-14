@@ -24,7 +24,7 @@ jobs:
       run: |
           git fetch --unshallow
           git checkout master-to-develop
-          git merge --no-ff origin/master -m "Auto-merge master back to master-to-develop"
+          git merge --no-ff -X theirs origin/master -m "Auto-merge master back to master-to-develop"
           git push --set-upstream origin master-to-develop
           
     - name: create pull request
