@@ -27,27 +27,21 @@ class PostReleaseManager {
       });
       console.log(developBranch);
       const developBranchSHA = developBranch.data.commit.sha;
+      console.log(developBranchSHA);
 
       try {
-        await this.github.repos.getBranch({
-          owner: this.owner,
-          repo: this.repo,
-          branch,
+        const resp = await this.github.git.createRef({
+          ref,
+          sha: developBranchSHA,
+          ...context.repo,
         });
-      } catch (error) {
-        if (error.name === 'HttpError' && error.status === 404) {
-          const resp = await this.github.git.createRef({
-            ref,
-            sha: developBranchSHA,
-            ...context.repo,
-          });
 
-          return resp;
-        } else {
+        return resp;
+      } catch (error) {
           throw Error(error);
         }
       }
-  }
+
 
   async run() {
     try {
