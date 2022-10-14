@@ -19,14 +19,14 @@ class PostReleaseManager {
       const ref = `refs/heads/${branch}`;
 
       try {
-        await this.github.rest.repos.getBranch({
+        await this.github.repos.getBranch({
           owner: this.owner,
           repo: this.repo,
           branch,
         });
       } catch (error) {
         if (error.name === 'HttpError' && error.status === 404) {
-          const resp = await this.github.rest.git.createRef({
+          const resp = await this.github.git.createRef({
             ref,
             sha: sha || context.sha,
             ...context.repo,
