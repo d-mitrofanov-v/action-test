@@ -15,7 +15,7 @@ class PostReleaseManager {
     const developBranch = await this.github.repos.getBranch({
       owner: this.owner,
       repo: this.repo,
-      branch: 'develop'
+      branch: 'master'
     });
 
     return developBranch;
@@ -49,7 +49,7 @@ class PostReleaseManager {
         owner: this.owner,
         repo: this.repo,
         base: 'master-to-develop',
-        head: 'develop',
+        head: 'master',
         title: 'Master to develop into develop'
       });
 
