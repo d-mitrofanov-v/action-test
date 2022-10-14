@@ -8,7 +8,7 @@ on:
 jobs:
   create_post_release_pr:
     name: Create master to develop PR
-    runs-on: node12
+    runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
