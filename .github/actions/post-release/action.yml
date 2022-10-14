@@ -1,0 +1,14 @@
+name: 'Cryptopay branch automation'
+description: 'Automate master-to-team merges'
+inputs:
+  branch:
+    description: 'The branch to create'
+    default: 'master-to-develop'
+  sha:
+    description: 'The SHA1 value for the branch reference'
+outputs:
+  created:
+    description: 'Boolean value representing whether or not a new branch was created.'
+runs:
+  using: 'node12'
+  main: 'index.js'
