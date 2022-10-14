@@ -53,7 +53,7 @@ class PostReleaseManager {
         title: 'Master to develop into develop'
       });
       console.log(resp)
-      return resp.number;
+      return resp.data.number;
     } catch (error) {
       throw Error(error);
     }
