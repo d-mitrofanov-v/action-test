@@ -32,7 +32,7 @@ class PostReleaseManager {
             ...context.repo,
           });
 
-          return resp?.data?.ref === ref;
+          return resp;
         } else {
           throw Error(error);
         }
