@@ -49,7 +49,7 @@ class PostReleaseManager {
         owner: this.owner,
         repo: this.repo,
         base: 'master-to-develop',
-        head: 'master',
+        head: 'develop',
         title: 'Master to develop into develop'
       });
 
