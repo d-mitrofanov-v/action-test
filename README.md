@@ -3,3 +3,4 @@
 push:
     branches:
       - main
+      2
