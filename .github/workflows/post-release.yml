@@ -11,10 +11,23 @@ jobs:
     steps:
     - name: Checkout develop branch
       uses: actions/checkout@master
+    
+    - name: Set Git config
+      run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
 
     - name: Create master-to-develop branch
       run: git branch master-to-develop develop
       
-    - name: Push new branch  
-      run: git push origin master-to-develop
+    - name: Merge master to master-to-develop
+      run: |
+          git fetch --unshallow
+          git checkout master-to-develop
+          git merge --no-ff origin/master -m "Auto-merge master back to master-to-develop"
+          git push --set-upstream origin master-to-develop
+          
+    - name: create pull request
+      run: gh pr create -B develop -H master-to-develop --assignee d-mitrofanov-v --title 'Merge master-to-develop into develop' --body 'Created by Github action' 
       
+
