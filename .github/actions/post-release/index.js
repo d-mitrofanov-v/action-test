@@ -42,21 +42,30 @@ class PostReleaseManager {
       }
   }
 
-  async mergeBranches() {
+  async createPR() {
 
     try {
       const resp = await this.github.pulls.create({
         owner: this.owner,
         repo: this.repo,
         base: 'master-to-develop',
-        head: 'master',
-        title: 'Master to develop into master'
+        head: 'develop',
+        title: 'Master to develop into develop'
       });
 
-      return resp;
+      return resp.number;
     } catch (error) {
       throw Error(error);
     }
+  }
+
+  async updatePR(prNum) {
+    const resp = await this.github.pulls.updateBranch({
+      owner: this.owner,
+      repo: this.repo,
+      pull_number: prNum,
+    });
+    return resp;
   }
 
   async run() {
@@ -67,7 +76,9 @@ class PostReleaseManager {
 
       await that.createBranch(developBranch);
       console.log('Merging branches');
-      await that.mergeBranches();
+      const prNum = await that.createPR();
+
+      await that.updatePR(prNum);
     } catch (error) {
       core.setFailed(error.message);
     }
