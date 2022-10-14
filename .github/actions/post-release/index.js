@@ -50,10 +50,11 @@ class PostReleaseManager {
         repo: this.repo,
         base: 'develop',
         head: 'master-to-develop',
-        title: 'Master to develop into develop'
+        title: 'Master-to-develop into develop'
       });
-      console.log(resp)
-      return resp.data.number;
+
+      const prNum = resp.data.number;
+      return prNum;
     } catch (error) {
       throw Error(error);
     }
@@ -64,6 +65,16 @@ class PostReleaseManager {
       owner: this.owner,
       repo: this.repo,
       pull_number: prNum,
+    });
+    return resp;
+  }
+
+  async requestReviewers(prNum) {
+    const resp = await this.github.pulls.requestReviewers({
+      owner: this.owner,
+      repo: this.repo,
+      pull_number: prNum,
+      reviewers: 'd-mitrofanov-v',
     });
     return resp;
   }
@@ -79,6 +90,7 @@ class PostReleaseManager {
       const prNum = await that.createPR();
 
       await that.updatePR(prNum);
+      await that.requestReviewers(prNum);
     } catch (error) {
       core.setFailed(error.message);
     }
