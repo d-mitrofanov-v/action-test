@@ -82,7 +82,7 @@ class PostReleaseManager {
     try {
       let that = this;
       console.log('Creating new branch');
-      const developBranch = await that.getDevBranch();
+      const developBranch = await that.getMasterBranch();
       await that.createBranch(developBranch);
 
       console.log('Creating PR');
