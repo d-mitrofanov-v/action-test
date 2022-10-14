@@ -42,9 +42,6 @@ class PostReleaseManager {
   async run() {
     try {
       console.log('Create new branch');
-      const branches = await this.getAllBranches();
-
-      console.log(`Branches loaded: ${branches.length}`);
       let that = this;
 
       await that.createBranch();
