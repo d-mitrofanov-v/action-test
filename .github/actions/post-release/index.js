@@ -13,14 +13,14 @@ async function run() {
   const ref = `refs/heads/${branch}`;
 
   try {
-    await github.rest.repos.getBranch({
+    await oktokit.rest.repos.getBranch({
       owner: owner,
       repo: repo,
       branch,
     });
   } catch (error) {
     if (error.name === 'HttpError' && error.status === 404) {
-      const resp = await github.rest.git.createRef({
+      const resp = await oktokit.rest.git.createRef({
         ref,
         sha: sha || context.sha,
         ...context.repo,
