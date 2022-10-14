@@ -13,7 +13,7 @@ class PostReleaseManager {
 
   async createBranch(context) {
       let branch = core.getInput('branch');
-      console.log(branch);
+
       const sha = core.getInput('sha');
 
       branch = branch.replace('refs/heads/', '');
@@ -25,7 +25,7 @@ class PostReleaseManager {
           repo: this.repo,
           branch: 'develop'
       });
-
+      console.log(developBranch);
       const developBranchSHA = developBranch.commit.sha;
 
       try {
