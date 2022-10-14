@@ -12,7 +12,7 @@ class PostReleaseManager {
   }
 
   async createBranch(context) {
-      const branch = core.getInput('branch');
+      let branch = core.getInput('branch');
       const sha = core.getInput('sha');
 
       branch = branch.replace('refs/heads/', '');
