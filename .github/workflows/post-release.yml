@@ -16,4 +16,6 @@ jobs:
 
     - name: Create master-to-develop branch
       run: git checkout -b master-to-develop
+    - name: Push new branch  
+      run: git push origin master-to-develop
       
