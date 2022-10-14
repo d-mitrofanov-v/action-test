@@ -48,8 +48,8 @@ class PostReleaseManager {
       const resp = await this.github.pulls.create({
         owner: this.owner,
         repo: this.repo,
-        base: 'master-to-develop',
-        head: 'develop',
+        base: 'develop',
+        head: 'master-to-develop',
         title: 'Master to develop into develop'
       });
 
