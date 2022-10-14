@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Create Branch
-      uses: ./actions/post-release
+      uses: /actions/post-release
       with:
         branch: 'master-to-develop'
 
