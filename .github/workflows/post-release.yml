@@ -1,32 +1,25 @@
 name: Automated post-release PR management
 on:
   workflow_dispatch:
-  
+  push:
+    branches:
+      - master
+
 jobs:
   create_post_release_pr:
-    name: Create master to develop PR 
-    runs-on: ubuntu-latest
+    name: Create master to develop PR
+    runs-on: self-hosted
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - name: Checkout develop branch
       uses: actions/checkout@master
-      with:
-        ref: develop
 
-    - name: Create develop copy branch
-      uses: peterjgrainger/action-create-branch@v2.2.0
+    - name: Create Branch
+      uses: ./actions/post-release
       with:
         branch: 'master-to-develop'
 
-    - name: Checkout master-to-develop branch
-      uses: actions/checkout@master
-      with:
-        ref: master-to-develop
 
-    - name: Update master-to-develop branch
-      uses: chinthakagodawita/autoupdate-action@v1
-    
-    - name: create pull request
-      run: gh pr create -B develop -H master-to-develop --assignee @d-mitrofanov-v --title 'Merge master-to-develop into develop' --body 'Created by Github action' 
-      
+
+

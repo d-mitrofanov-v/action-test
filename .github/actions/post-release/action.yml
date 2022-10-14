@@ -1,0 +1,13 @@
+name: 'Cryptopay branch automation'
+description: 'Automate master-to-team merges'
+inputs:
+  repository_name:
+    description: 'Current repository name, i.e. cryptopay-dev'
+    required: true
+  branch_pattern:
+    description: 'Release branch pattern, i.e. team-'
+    required: false
+    default: 'team-'
+runs:
+  using: 'node12'
+  main: 'index.js'
