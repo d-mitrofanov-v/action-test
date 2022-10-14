@@ -26,7 +26,7 @@ class PostReleaseManager {
           branch: 'develop'
       });
       console.log(developBranch);
-      const developBranchSHA = developBranch.commit.sha;
+      const developBranchSHA = developBranch.data.commit.sha;
 
       try {
         await this.github.repos.getBranch({
