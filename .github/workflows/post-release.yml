@@ -11,6 +11,11 @@ jobs:
     steps:
     - name: Checkout develop branch
       uses: actions/checkout@master
+    
+    - name: Set Git config
+      run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
 
     - name: Create master-to-develop branch
       run: git branch master-to-develop develop
