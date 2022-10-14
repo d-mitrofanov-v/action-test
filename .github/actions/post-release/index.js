@@ -70,7 +70,7 @@ class PostReleaseManager {
   }
 
   async requestReviewers(prNum) {
-    const resp = await this.github.pulls.requestReviewers({
+    const resp = await this.github.pulls.createReviewRequest({
       owner: this.owner,
       repo: this.repo,
       pull_number: prNum,
