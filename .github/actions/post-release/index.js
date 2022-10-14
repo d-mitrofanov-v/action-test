@@ -11,31 +11,31 @@ class PostReleaseManager {
     this.github = new GitHub(process.env.GITHUB_TOKEN);
   }
 
-  async getDevBranch() {
-    const developBranch = await this.github.repos.getBranch({
+  async getMasterBranch() {
+    const masterBranch = await this.github.repos.getBranch({
       owner: this.owner,
       repo: this.repo,
-      branch: 'develop'
+      branch: 'master'
     });
 
-    return developBranch;
+    return masterBranch;
   }
 
-  async createBranch(developBranch) {
+  async createBranch(masterBranch) {
     let branch = core.getInput('branch');
     branch = branch.replace('refs/heads/', '');
     const ref = `refs/heads/${branch}`;
 
-    const developBranchSHA = developBranch.data.commit.sha;
+    const masterBranchSHA = masterBranch.data.commit.sha;
 
     try {
       const resp = await this.github.git.createRef({
         ref,
-        sha: developBranchSHA,
+        sha: masterBranchSHA,
         owner: this.owner,
         repo: this.repo,
       });
-      console.log(resp);
+
       return resp;
     } catch (error) {
         throw Error(error);
@@ -43,17 +43,17 @@ class PostReleaseManager {
   }
 
   async createPR() {
-
     try {
       const resp = await this.github.pulls.create({
         owner: this.owner,
         repo: this.repo,
-        base: 'master-to-develop',
-        head: 'develop',
-        title: 'Master to develop into develop'
+        base: 'develop',
+        head: 'master-to-develop',
+        title: 'Master-to-develop into develop'
       });
 
-      return resp.number;
+      const prNum = resp.data.number;
+      return prNum;
     } catch (error) {
       throw Error(error);
     }
@@ -68,17 +68,31 @@ class PostReleaseManager {
     return resp;
   }
 
+  async requestReviewers(prNum) {
+    const resp = await this.github.pulls.createReviewRequest({
+      owner: this.owner,
+      repo: this.repo,
+      pull_number: prNum,
+      reviewers: ['d-mitrofanov-v'],
+    });
+    return resp;
+  }
+
   async run() {
     try {
       let that = this;
-      console.log('Create new branch');
+      console.log('Creating new branch');
       const developBranch = await that.getDevBranch();
-
       await that.createBranch(developBranch);
-      console.log('Merging branches');
+
+      console.log('Creating PR');
       const prNum = await that.createPR();
 
+      console.log('Updating PR');
       await that.updatePR(prNum);
+
+      console.log('Requesting Reviewers');
+      await that.requestReviewers(prNum);
     } catch (error) {
       core.setFailed(error.message);
     }
