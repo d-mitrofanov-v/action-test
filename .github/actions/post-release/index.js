@@ -3,7 +3,7 @@ const { github, context } = require('@actions/github');
 
 async function run() {
   const {owner, repo} = context.repo;
-  github = github.getOctokit(process.env.GITHUB_TOKEN);
+  github = new github.getOctokit(process.env.GITHUB_TOKEN);
 
   const branch = core.getInput('branch');
   const sha = core.getInput('sha');
