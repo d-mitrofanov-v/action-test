@@ -14,19 +14,6 @@ jobs:
       with:
         ref: develop
 
-    - name: Create develop copy branch
-      uses: peterjgrainger/action-create-branch@v2.2.0
-      with:
-        branch: 'master-to-develop'
-
-    - name: Checkout master-to-develop branch
-      uses: actions/checkout@master
-      with:
-        ref: master-to-develop
-
-    - name: Update master-to-develop branch
-      uses: docker://chinthakagodawita/autoupdate-action:v1
-    
-    - name: create pull request
-      run: gh pr create -B develop -H master-to-develop --assignee @d-mitrofanov-v --title 'Merge master-to-develop into develop' --body 'Created by Github action' 
+    - name: Create master-to-develop branch
+      run: git checkout -b master-to-develop
       
