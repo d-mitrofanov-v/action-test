@@ -45,7 +45,7 @@ class PostReleaseManager {
   async mergeBranches() {
 
     try {
-      const resp = await this.github.repos.merge({
+      const resp = await this.github.pulls.create({
         owner: this.owner,
         repo: this.repo,
         base: 'master-to-develop',
