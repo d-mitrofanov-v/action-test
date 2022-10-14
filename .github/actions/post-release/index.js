@@ -13,10 +13,20 @@ class PostReleaseManager {
 
   async createBranch(context) {
       let branch = core.getInput('branch');
+      console.log(branch);
       const sha = core.getInput('sha');
 
       branch = branch.replace('refs/heads/', '');
+      console.log(branch);
       const ref = `refs/heads/${branch}`;
+
+      const developBranch = await this.github.repos.getBranch({
+          owner: this.owner,
+          repo: this.repo,
+          branch: 'develop'
+      });
+
+      const developBranchSHA = developBranch.commit.sha;
 
       try {
         await this.github.repos.getBranch({
@@ -28,7 +38,7 @@ class PostReleaseManager {
         if (error.name === 'HttpError' && error.status === 404) {
           const resp = await this.github.git.createRef({
             ref,
-            sha: sha || context.sha,
+            sha: developBranchSHA,
             ...context.repo,
           });
 
