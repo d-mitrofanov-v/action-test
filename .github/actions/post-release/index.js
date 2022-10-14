@@ -50,6 +50,7 @@ class PostReleaseManager {
         repo: this.repo,
         base: 'master-to-develop',
         head: 'master',
+        title: 'Master to develop into master'
       });
 
       return resp;
