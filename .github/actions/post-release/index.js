@@ -1,57 +1,36 @@
 const core = require('@actions/core');
 const { github, context } = require('@actions/github');
 
+async function run() {
+  const {owner, repo} = context.repo;
+  github = github.getOctokit(process.env.GITHUB_TOKEN);
 
-class PostReleaseManager {
-  constructor() {
-    const {owner, repo} = context.repo;
+  const branch = core.getInput('branch');
+  const sha = core.getInput('sha');
 
-    this.owner = owner;
-    this.repo = repo;
-    this.octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-  }
+  branch = branch.replace('refs/heads/', '');
+  const ref = `refs/heads/${branch}`;
 
-  async createBranch(context) {
-      const branch = core.getInput('branch');
-      const sha = core.getInput('sha');
+  try {
+    await github.rest.repos.getBranch({
+      owner: owner,
+      repo: repo,
+      branch,
+    });
+  } catch (error) {
+    if (error.name === 'HttpError' && error.status === 404) {
+      const resp = await github.rest.git.createRef({
+        ref,
+        sha: sha || context.sha,
+        ...context.repo,
+      });
 
-      branch = branch.replace('refs/heads/', '');
-      const ref = `refs/heads/${branch}`;
-
-      try {
-        await this.github.rest.repos.getBranch({
-          owner: this.owner,
-          repo: this.repo,
-          branch,
-        });
-      } catch (error) {
-        if (error.name === 'HttpError' && error.status === 404) {
-          const resp = await this.github.rest.git.createRef({
-            ref,
-            sha: sha || context.sha,
-            ...context.repo,
-          });
-
-          return resp;
-        } else {
-          throw Error(error);
-        }
-      }
-  }
-
-  async run() {
-    try {
-      console.log('Create new branch');
-      const branches = await this.getAllBranches();
-
-      console.log(`Branches loaded: ${branches.length}`);
-      let that = this;
-
-      await that.createBranch();
-    } catch (error) {
-      core.setFailed(error.message);
+      return resp;
+    } else {
+      throw Error(error);
     }
   }
-}
 
-new PostReleaseManager().run();
+};
+
+run();
