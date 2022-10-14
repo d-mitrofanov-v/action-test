@@ -2,5 +2,5 @@
 
 push:
     branches:
-      - main
-      2
+      - main2
+
