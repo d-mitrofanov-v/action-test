@@ -11,45 +11,59 @@ class PostReleaseManager {
     this.github = new GitHub(process.env.GITHUB_TOKEN);
   }
 
-  async createBranch(context) {
-      let branch = core.getInput('branch');
+  async getDevBranch() {
+    const developBranch = await this.github.repos.getBranch({
+      owner: this.owner,
+      repo: this.repo,
+      branch: 'develop'
+    });
 
-      const sha = core.getInput('sha');
+    return developBranch;
+  }
 
-      branch = branch.replace('refs/heads/', '');
-      console.log(branch);
-      const ref = `refs/heads/${branch}`;
+  async createBranch(developBranch) {
+    let branch = core.getInput('branch');
+    branch = branch.replace('refs/heads/', '');
+    const ref = `refs/heads/${branch}`;
 
-      const developBranch = await this.github.repos.getBranch({
-          owner: this.owner,
-          repo: this.repo,
-          branch: 'develop'
+    const developBranchSHA = developBranch.data.commit.sha;
+
+    try {
+      const resp = await this.github.git.createRef({
+        ref,
+        sha: developBranchSHA,
+        owner: this.owner,
+        repo: this.repo,
       });
-      console.log(developBranch);
-      const developBranchSHA = developBranch.data.commit.sha;
-      console.log(developBranch);
-
-      try {
-        const resp = await this.github.git.createRef({
-          ref,
-          sha: developBranchSHA,
-          owner: this.owner,
-          repo: this.repo,
-        });
-
-        return resp;
-      } catch (error) {
-          throw Error(error);
-        }
+      console.log(resp);
+      return resp;
+    } catch (error) {
+        throw Error(error);
       }
+  }
 
+  async mergeBranches() {
+
+    try {
+      const resp = await this.github.repos.merge({
+        owner: this.owner,
+        repo: this.repo,
+        base,
+        head,
+      });
+    } catch {
+
+    }
+  }
 
   async run() {
     try {
-      console.log('Create new branch');
       let that = this;
-
-      await that.createBranch();
+      console.log('Create new branch');
+      const developBranch = await that.getDevBranch();
+      await that.createBranch(developBranch);
+      console.log('Create new branch');
+      // await that.mergeBranches(developBranch, masterToDevelopment);
     } catch (error) {
       core.setFailed(error.message);
     }
