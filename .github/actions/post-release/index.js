@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const { GitHub, context } = require('@actions/github');
+const { github, context } = require('@actions/github');
 
 
 class PostReleaseManager {
@@ -8,7 +8,7 @@ class PostReleaseManager {
 
     this.owner = owner;
     this.repo = repo;
-    this.github = new GitHub(process.env.GITHUB_TOKEN);
+    this.github = github.getOctokit(process.env.GITHUB_TOKEN);
   }
 
   async createBranch(context) {
