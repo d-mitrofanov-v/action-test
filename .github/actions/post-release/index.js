@@ -11,27 +11,27 @@ class PostReleaseManager {
     this.github = new GitHub(process.env.GITHUB_TOKEN);
   }
 
-  async getDevBranch() {
-    const developBranch = await this.github.repos.getBranch({
+  async getMasterBranch() {
+    const masterBranch = await this.github.repos.getBranch({
       owner: this.owner,
       repo: this.repo,
       branch: 'master'
     });
 
-    return developBranch;
+    return masterBranch;
   }
 
-  async createBranch(developBranch) {
+  async createBranch(masterBranch) {
     let branch = core.getInput('branch');
     branch = branch.replace('refs/heads/', '');
     const ref = `refs/heads/${branch}`;
 
-    const developBranchSHA = developBranch.data.commit.sha;
+    const masterBranchSHA = masterBranch.data.commit.sha;
 
     try {
       const resp = await this.github.git.createRef({
         ref,
-        sha: developBranchSHA,
+        sha: masterBranchSHA,
         owner: this.owner,
         repo: this.repo,
       });
@@ -43,7 +43,6 @@ class PostReleaseManager {
   }
 
   async createPR() {
-
     try {
       const resp = await this.github.pulls.create({
         owner: this.owner,
@@ -82,14 +81,17 @@ class PostReleaseManager {
   async run() {
     try {
       let that = this;
-      console.log('Create new branch');
+      console.log('Creating new branch');
       const developBranch = await that.getDevBranch();
-
       await that.createBranch(developBranch);
-      console.log('Merging branches');
+
+      console.log('Creating PR');
       const prNum = await that.createPR();
 
+      console.log('Updating PR');
       await that.updatePR(prNum);
+
+      console.log('Requesting Reviewers');
       await that.requestReviewers(prNum);
     } catch (error) {
       core.setFailed(error.message);
