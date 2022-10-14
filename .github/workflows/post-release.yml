@@ -22,4 +22,4 @@ jobs:
       run: gh pr create -B develop -H master-to-develop --assignee @d-mitrofanov-v --title 'Merge master-to-develop into develop' --body 'Created by Github action'
       
     - name: Update master-to-develop branch
-      uses: chinthakagodawita/autoupdate-action@v1
+      uses: docker://chinthakagodawita/autoupdate-action:v1
